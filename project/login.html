@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ReWear</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-leaf"></i>
+                <span>ReWear</span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="browse.html" class="nav-link">Browse Items</a>
+                <div class="nav-auth">
+                    <a href="login.html" class="nav-link active">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="form-container">
+            <h1 class="form-title">Welcome Back</h1>
+            <p style="text-align: center; color: var(--text-secondary); margin-bottom: 2rem;">
+                Sign in to continue your sustainable fashion journey
+            </p>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" name="email" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary form-submit">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Sign In
+                </button>
+
+                <div class="form-link">
+                    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+                </div>
+
+                <div class="form-link" style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+                    <p><strong>Demo Accounts:</strong></p>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">
+                        Admin: admin@rewear.com / password<br>
+                        User: user@rewear.com / password
+                    </p>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script src="js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Create demo users if they don't exist
+            const users = JSON.parse(localStorage.getItem('rewear_users')) || [];
+            
+            const demoUsers = [
+                {
+                    id: 'admin-user',
+                    name: 'Admin User',
+                    email: 'admin@rewear.com',
+                    password: 'password',
+                    points: 1000,
+                    isAdmin: true,
+                    createdAt: new Date().toISOString()
+                },
+                {
+                    id: 'demo-user',
+                    name: 'Demo User',
+                    email: 'user@rewear.com',
+                    password: 'password',
+                    points: 250,
+                    isAdmin: false,
+                    createdAt: new Date().toISOString()
+                }
+            ];
+
+            demoUsers.forEach(demoUser => {
+                if (!users.find(u => u.email === demoUser.email)) {
+                    users.push(demoUser);
+                }
+            });
+
+            localStorage.setItem('rewear_users', JSON.stringify(users));
+
+            // Handle form submission
+            const form = document.getElementById('login-form');
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = new FormData(form);
+                const email = formData.get('email');
+                const password = formData.get('password');
+                
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                
+                try {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulate network delay
+                    setTimeout(() => {
+                        try {
+                            auth.login(email, password);
+                            
+                            // Show success and redirect
+                            submitBtn.innerHTML = '<i class="fas fa-check"></i> Success!';
+                            
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.html';
+                            }, 1000);
+                            
+                        } catch (error) {
+                            // Show error
+                            showError(error.message);
+                            submitBtn.innerHTML = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    }, 1000);
+                    
+                } catch (error) {
+                    showError(error.message);
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+            
+            function showError(message) {
+                // Remove existing error
+                const existingError = form.querySelector('.form-error');
+                if (existingError) {
+                    existingError.remove();
+                }
+                
+                // Add new error
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'form-error';
+                errorDiv.textContent = message;
+                
+                const submitBtn = form.querySelector('button[type="submit"]');
+                submitBtn.parentNode.insertBefore(errorDiv, submitBtn);
+            }
+        });
+    </script>
+</body>
+</html>

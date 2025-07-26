@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Items - ReWear</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .browse-header {
+            padding: calc(70px + var(--space-lg)) var(--space-sm) var(--space-lg);
+            background-color: var(--bg-secondary);
+            text-align: center;
+        }
+
+        .browse-title {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-sm);
+        }
+
+        .browse-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xl);
+        }
+
+        .filters-section {
+            padding: var(--space-lg) var(--space-sm);
+            background-color: var(--bg-tertiary);
+        }
+
+        .filters-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: var(--space-md);
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-xs);
+        }
+
+        .filter-label {
+            font-weight: var(--font-weight-medium);
+            color: var(--text-primary);
+            font-size: 0.9rem;
+        }
+
+        .search-input {
+            position: relative;
+        }
+
+        .search-input input {
+            width: 100%;
+            padding: var(--space-sm) var(--space-sm) var(--space-sm) 2.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            transition: border-color var(--transition-fast);
+        }
+
+        .search-input input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .search-input i {
+            position: absolute;
+            left: var(--space-sm);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .items-section {
+            padding: var(--space-xl) var(--space-sm);
+        }
+
+        .items-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .items-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .items-count {
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        @media (max-width: 768px) {
+            .filters-grid {
+                grid-template-columns: 1fr;
+                gap: var(--space-sm);
+            }
+
+            .browse-title {
+                font-size: 2rem;
+            }
+
+            .items-header {
+                flex-direction: column;
+                gap: var(--space-sm);
+                align-items: stretch;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-leaf"></i>
+                <span>ReWear</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="browse.html" class="nav-link active">Browse Items</a>
+                <a href="#" class="nav-link" id="dashboard-link" style="display: none;">Dashboard</a>
+                <a href="#" class="nav-link" id="admin-link" style="display: none;">Admin</a>
+                <div class="nav-auth" id="nav-auth">
+                    <a href="login.html" class="nav-link">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="nav-user" id="nav-user" style="display: none;">
+                    <span class="user-points"><i class="fas fa-coins"></i> <span id="user-points">0</span></span>
+                    <div class="user-dropdown">
+                        <button class="user-btn" id="user-btn">
+                            <i class="fas fa-user"></i>
+                            <span id="user-name">User</span>
+                        </button>
+                        <div class="dropdown-content" id="dropdown-content">
+                            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            <a href="add-item.html"><i class="fas fa-plus"></i> Add Item</a>
+                            <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="browse-header">
+            <h1 class="browse-title">Browse Available Items</h1>
+            <p class="browse-subtitle">Discover amazing clothing items from our community. Swap directly or redeem with points!</p>
+        </section>
+
+        <section class="filters-section">
+            <div class="filters-container">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label class="filter-label">Search Items</label>
+                        <div class="search-input">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="search-input" placeholder="Search by title, description, or tags...">
+                        </div>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Category</label>
+                        <select id="category-filter" class="form-select">
+                            <option value="">All Categories</option>
+                            <option value="Tops">Tops</option>
+                            <option value="Bottoms">Bottoms</option>
+                            <option value="Dresses">Dresses</option>
+                            <option value="Outerwear">Outerwear</option>
+                            <option value="Shoes">Shoes</option>
+                            <option value="Accessories">Accessories</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Size</label>
+                        <select id="size-filter" class="form-select">
+                            <option value="">All Sizes</option>
+                            <option value="XS">XS</option>
+                            <option value="S">S</option>
+                            <option value="M">M</option>
+                            <option value="L">L</option>
+                            <option value="XL">XL</option>
+                            <option value="XXL">XXL</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label class="filter-label">Sort By</label>
+                        <select id="sort-filter" class="form-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="points-low">Points: Low to High</option>
+                            <option value="points-high">Points: High to Low</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="items-section">
+            <div class="items-container">
+                <div class="items-header">
+                    <div class="items-count" id="items-count">Loading items...</div>
+                    <a href="add-item.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i>
+                        List an Item
+                    </a>
+                </div>
+                
+                <div class="items-grid" id="items-grid">
+                    <!-- Items will be loaded here -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <i class="fas fa-leaf"></i>
+                        <span>ReWear</span>
+                    </div>
+                    <p>Building a sustainable future through community-driven fashion exchange.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="browse.html">Browse Items</a></li>
+                        <li><a href="add-item.html">List an Item</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="signup.html">Sign Up</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ReWear. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update items count when items are loaded
+            const updateItemsCount = () => {
+                const itemsGrid = document.getElementById('items-grid');
+                const itemsCount = document.getElementById('items-count');
+                
+                if (itemsGrid && itemsCount) {
+                    const itemCards = itemsGrid.querySelectorAll('.item-card');
+                    const count = itemCards.length;
+                    itemsCount.textContent = `${count} item${count !== 1 ? 's' : ''} found`;
+                }
+            };
+
+            // Initial count update
+            setTimeout(updateItemsCount, 100);
+
+            // Update count when filters change
+            const filters = ['search-input', 'category-filter', 'size-filter', 'sort-filter'];
+            filters.forEach(filterId => {
+                const element = document.getElementById(filterId);
+                if (element) {
+                    element.addEventListener('change', () => {
+                        setTimeout(updateItemsCount, 100);
+                    });
+                    element.addEventListener('input', () => {
+                        setTimeout(updateItemsCount, 100);
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

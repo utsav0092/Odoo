@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - ReWear</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .admin-container {
+            max-width: 1400px;
+            margin: calc(70px + var(--space-xl)) auto var(--space-xl);
+            padding: 0 var(--space-sm);
+        }
+
+        .admin-header {
+            background-color: var(--bg-secondary);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            margin-bottom: var(--space-xl);
+            text-align: center;
+        }
+
+        .admin-title {
+            color: var(--text-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .admin-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .admin-stat-card {
+            background-color: var(--bg-secondary);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .admin-stat-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-sm);
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .admin-stat-value {
+            font-size: 2rem;
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .admin-stat-label {
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-medium);
+            font-size: 0.9rem;
+        }
+
+        .admin-section {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            margin-bottom: var(--space-xl);
+        }
+
+        .admin-section-header {
+            padding: var(--space-lg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-section-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0;
+        }
+
+        .admin-section-content {
+            padding: var(--space-lg);
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: var(--space-md);
+        }
+
+        .admin-table th,
+        .admin-table td {
+            padding: var(--space-sm);
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-table th {
+            background-color: var(--bg-tertiary);
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+        }
+
+        .admin-table td {
+            color: var(--text-secondary);
+        }
+
+        .admin-item-card,
+        .admin-user-card {
+            background-color: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .item-info,
+        .user-info {
+            flex: 1;
+        }
+
+        .item-info h4,
+        .user-info h4 {
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .item-info p,
+        .user-info p {
+            color: var(--text-secondary);
+            margin-bottom: var(--space-xs);
+            font-size: 0.9rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: var(--space-xs);
+            flex-shrink: 0;
+        }
+
+        .admin-actions .btn {
+            padding: var(--space-xs) var(--space-sm);
+            font-size: 0.875rem;
+        }
+
+        .admin-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .status-available {
+            background-color: #e8f5e8;
+            color: var(--success-color);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .status-requested {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .status-swapped {
+            background-color: #e3f2fd;
+            color: var(--secondary-color);
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .empty-admin-state {
+            text-align: center;
+            padding: var(--space-xxl);
+            color: var(--text-muted);
+        }
+
+        .empty-admin-state i {
+            font-size: 3rem;
+            margin-bottom: var(--space-sm);
+            color: var(--primary-color);
+            opacity: 0.5;
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                margin: calc(70px + var(--space-lg)) var(--space-sm) var(--space-lg);
+            }
+
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .admin-section-header {
+                flex-direction: column;
+                gap: var(--space-sm);
+                align-items: stretch;
+            }
+
+            .admin-item-card,
+            .admin-user-card {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .admin-actions {
+                justify-content: center;
+            }
+
+            .admin-table {
+                font-size: 0.875rem;
+            }
+
+            .admin-table th,
+            .admin-table td {
+                padding: var(--space-xs);
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-leaf"></i>
+                <span>ReWear</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="browse.html" class="nav-link">Browse Items</a>
+                <a href="dashboard.html" class="nav-link">Dashboard</a>
+                <a href="admin.html" class="nav-link active">Admin</a>
+                <div class="nav-auth" id="nav-auth" style="display: none;">
+                    <a href="login.html" class="nav-link">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="nav-user" id="nav-user">
+                    <span class="user-points"><i class="fas fa-coins"></i> <span id="user-points">0</span></span>
+                    <div class="user-dropdown">
+                        <button class="user-btn" id="user-btn">
+                            <i class="fas fa-user"></i>
+                            <span id="user-name">Admin</span>
+                        </button>
+                        <div class="dropdown-content" id="dropdown-content">
+                            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            <a href="add-item.html"><i class="fas fa-plus"></i> Add Item</a>
+                            <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="admin-container">
+            <div class="admin-header">
+                <h1 class="admin-title">Admin Panel</h1>
+                <p class="admin-subtitle">Manage the ReWear community platform</p>
+            </div>
+
+            <div class="admin-stats">
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="admin-stat-value" id="admin-total-users">0</div>
+                    <div class="admin-stat-label">Total Users</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <div class="admin-stat-value" id="admin-total-items">0</div>
+                    <div class="admin-stat-label">Total Items</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="admin-stat-value" id="admin-total-swaps">0</div>
+                    <div class="admin-stat-label">Total Swaps</div>
+                </div>
+                <div class="admin-stat-card">
+                    <div class="admin-stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="admin-stat-value" id="admin-pending-swaps">0</div>
+                    <div class="admin-stat-label">Pending Swaps</div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-header">
+                    <h2 class="admin-section-title">Manage Items</h2>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">Review and moderate listed items</span>
+                </div>
+                <div class="admin-section-content">
+                    <div id="admin-items">
+                        <!-- Items will be loaded here -->
+                        <div class="empty-admin-state">
+                            <i class="fas fa-tshirt"></i>
+                            <h3>No items to manage</h3>
+                            <p>Items will appear here when users start listing them.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <div class="admin-section-header">
+                    <h2 class="admin-section-title">Manage Users</h2>
+                    <span style="color: var(--text-muted); font-size: 0.9rem;">View and manage community members</span>
+                </div>
+                <div class="admin-section-content">
+                    <div id="admin-users">
+                        <!-- Users will be loaded here -->
+                        <div class="empty-admin-state">
+                            <i class="fas fa-users"></i>
+                            <h3>No users to manage</h3>
+                            <p>Users will appear here when they sign up.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <i class="fas fa-leaf"></i>
+                        <span>ReWear</span>
+                    </div>
+                    <p>Building a sustainable future through community-driven fashion exchange.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="browse.html">Browse Items</a></li>
+                        <li><a href="add-item.html">List an Item</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="signup.html">Sign Up</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ReWear. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

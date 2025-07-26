@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - ReWear</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: calc(70px + var(--space-xl)) auto var(--space-xl);
+            padding: 0 var(--space-sm);
+        }
+
+        .dashboard-header {
+            background-color: var(--bg-secondary);
+            padding: var(--space-xl);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            margin-bottom: var(--space-xl);
+        }
+
+        .welcome-message {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-lg);
+        }
+
+        .welcome-text h1 {
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .welcome-text p {
+            color: var(--text-secondary);
+            margin-bottom: 0;
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: var(--space-sm);
+            flex-wrap: wrap;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-xl);
+        }
+
+        .stat-card {
+            background-color: var(--bg-secondary);
+            padding: var(--space-lg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            text-align: center;
+            transition: transform var(--transition-fast);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-sm);
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: var(--font-weight-bold);
+            color: var(--text-primary);
+            margin-bottom: var(--space-xs);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: var(--font-weight-medium);
+        }
+
+        .section {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-light);
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-header {
+            padding: var(--space-lg) var(--space-lg) 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            margin-bottom: 0;
+        }
+
+        .section-content {
+            padding: var(--space-lg);
+        }
+
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--space-lg);
+        }
+
+        .swaps-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .swap-card {
+            background-color: var(--bg-tertiary);
+            padding: var(--space-md);
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .swap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .swap-title {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            margin-bottom: 0;
+        }
+
+        .swap-status {
+            padding: var(--space-xs) var(--space-sm);
+            border-radius: var(--radius-sm);
+            font-size: 0.875rem;
+            font-weight: var(--font-weight-medium);
+        }
+
+        .status-success {
+            background-color: #e8f5e8;
+            color: var(--success-color);
+        }
+
+        .status-warning {
+            background-color: #fff3e0;
+            color: var(--warning-color);
+        }
+
+        .status-error {
+            background-color: #ffebee;
+            color: var(--error-color);
+        }
+
+        .swap-details {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .swap-details p {
+            margin-bottom: var(--space-xs);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xxl);
+            color: var(--text-muted);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: var(--space-sm);
+            color: var(--primary-color);
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin-bottom: var(--space-sm);
+            color: var(--text-secondary);
+        }
+
+        .user-profile {
+            background-color: var(--bg-tertiary);
+            padding: var(--space-lg);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-lg);
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+        }
+
+        .profile-item {
+            text-align: center;
+        }
+
+        .profile-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-bottom: var(--space-xs);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .profile-value {
+            font-weight: var(--font-weight-semibold);
+            color: var(--text-primary);
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                margin: calc(70px + var(--space-lg)) var(--space-sm) var(--space-lg);
+            }
+
+            .welcome-message {
+                flex-direction: column;
+                align-items: stretch;
+                gap: var(--space-md);
+            }
+
+            .quick-actions {
+                justify-content: center;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: var(--space-sm);
+                align-items: stretch;
+            }
+
+            .items-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-leaf"></i>
+                <span>ReWear</span>
+            </div>
+            <div class="nav-menu" id="nav-menu">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="browse.html" class="nav-link">Browse Items</a>
+                <a href="dashboard.html" class="nav-link active">Dashboard</a>
+                <a href="#" class="nav-link" id="admin-link" style="display: none;">Admin</a>
+                <div class="nav-auth" id="nav-auth" style="display: none;">
+                    <a href="login.html" class="nav-link">Login</a>
+                    <a href="signup.html" class="btn btn-primary">Sign Up</a>
+                </div>
+                <div class="nav-user" id="nav-user">
+                    <span class="user-points"><i class="fas fa-coins"></i> <span id="user-points">0</span></span>
+                    <div class="user-dropdown">
+                        <button class="user-btn" id="user-btn">
+                            <i class="fas fa-user"></i>
+                            <span id="user-name">User</span>
+                        </button>
+                        <div class="dropdown-content" id="dropdown-content">
+                            <a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                            <a href="add-item.html"><i class="fas fa-plus"></i> Add Item</a>
+                            <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="dashboard-container">
+            <div class="dashboard-header">
+                <div class="welcome-message">
+                    <div class="welcome-text">
+                        <h1>Welcome back, <span id="user-name-display">User</span>!</h1>
+                        <p>Ready to continue your sustainable fashion journey?</p>
+                    </div>
+                    <div class="quick-actions">
+                        <a href="add-item.html" class="btn btn-primary">
+                            <i class="fas fa-plus"></i>
+                            Add Item
+                        </a>
+                        <a href="browse.html" class="btn btn-secondary">
+                            <i class="fas fa-search"></i>
+                            Browse Items
+                        </a>
+                    </div>
+                </div>
+
+                <div class="user-profile">
+                    <div class="profile-grid">
+                        <div class="profile-item">
+                            <div class="profile-label">Email</div>
+                            <div class="profile-value" id="user-email-display">Loading...</div>
+                        </div>
+                        <div class="profile-item">
+                            <div class="profile-label">Points Balance</div>
+                            <div class="profile-value" id="user-points-display">0</div>
+                        </div>
+                        <div class="profile-item">
+                            <div class="profile-label">Member Since</div>
+                            <div class="profile-value" id="user-member-since">Loading...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tshirt"></i>
+                    </div>
+                    <div class="stat-value" id="user-items-count">0</div>
+                    <div class="stat-label">Items Listed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-exchange-alt"></i>
+                    </div>
+                    <div class="stat-value" id="user-swaps-count">0</div>
+                    <div class="stat-label">Total Swaps</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <div class="stat-value" id="user-points-earned">0</div>
+                    <div class="stat-label">Points Earned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <div class="stat-value">+12</div>
+                    <div class="stat-label">CO₂ Saved (kg)</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">My Items</h2>
+                    <a href="add-item.html" class="btn btn-outline">
+                        <i class="fas fa-plus"></i>
+                        Add New Item
+                    </a>
+                </div>
+                <div class="section-content">
+                    <div id="user-items" class="items-grid">
+                        <!-- User items will be loaded here -->
+                        <div class="empty-state">
+                            <i class="fas fa-tshirt"></i>
+                            <h3>No items listed yet</h3>
+                            <p>Start by adding your first item to the community!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <h2 class="section-title">Swap History</h2>
+                </div>
+                <div class="section-content">
+                    <div id="user-swaps" class="swaps-list">
+                        <!-- User swaps will be loaded here -->
+                        <div class="empty-state">
+                            <i class="fas fa-exchange-alt"></i>
+                            <h3>No swap history yet</h3>
+                            <p>Start browsing items to make your first swap!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-brand">
+                        <i class="fas fa-leaf"></i>
+                        <span>ReWear</span>
+                    </div>
+                    <p>Building a sustainable future through community-driven fashion exchange.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="browse.html">Browse Items</a></li>
+                        <li><a href="add-item.html">List an Item</a></li>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="signup.html">Sign Up</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Follow Us</h4>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 ReWear. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Update stats based on user data
+            const updateUserStats = () => {
+                const currentUser = auth.getCurrentUser();
+                if (!currentUser) return;
+
+                const items = JSON.parse(localStorage.getItem('rewear_items')) || [];
+                const swaps = JSON.parse(localStorage.getItem('rewear_swaps')) || [];
+                
+                const userItems = items.filter(item => item.userId === currentUser.id);
+                const userSwaps = swaps.filter(swap => 
+                    swap.requesterId === currentUser.id || swap.ownerId === currentUser.id
+                );
+
+                // Update stat values
+                document.getElementById('user-items-count').textContent = userItems.length;
+                document.getElementById('user-swaps-count').textContent = userSwaps.length;
+                document.getElementById('user-points-earned').textContent = userItems.length * 50; // 50 points per item
+            };
+
+            // Initial stats update
+            updateUserStats();
+
+            // Update stats when page becomes visible (in case data changed)
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    updateUserStats();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
